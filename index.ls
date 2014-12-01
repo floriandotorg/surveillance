@@ -1,36 +1,45 @@
+#############
+
+CAM_URL = 'http://192.168.2.51/videostream.cgi'
+USER = 'admin'
+PASS = '123456'
+
+THRESHOLD = 0x05
+PREBUFFER = 0 # +2
+POSTBUFFER = 4 * 1000
+
+#############
+
 require! {
   fs
   request
+  'child_process': {spawn}
   'mjpeg-consumer': MjpegConsumer
+  'motion': Stream: MotionStream
 }
-spawn = require('child_process').spawn
-
 consumer = new MjpegConsumer!
+motion = new MotionStream do
+  threshold = THRESHOLD
+  prebuffer = PREBUFFER
+  postbuffer = POSTBUFFER
 
-MotionStream = require('motion').Stream;
-motion = new MotionStream();
+ffmpeg = null
 
-writer = new FileOnWrite({
-  path: './video/',
-  ext: '.jpg'
-});
+motion.on 'motion_start', !->
+  console.log 'motion_start'
 
-ffmpeg = spawn('ffmpeg', <[-f image2pipe -c:v mjpeg -i - -f avi -c:v libx264  pipe:1]>)
+  ffmpeg := spawn('ffmpeg', <[-f image2pipe -r 15 -c:v mjpeg -i - -f avi -c:v libx264  pipe:1]>)
+  ffmpeg.stdout.pipe fs.createWriteStream("./video/#{new Date!}.avi")
+  motion.pipe ffmpeg.stdin
 
-ffmpeg.stderr.on 'data', (data) ->
-  console.log('grep stderr: ' + data);
+motion.on 'motion_stop', !->
+  console.log 'motion_stop'
+  ffmpeg.stdin.end!
 
-ffmpeg.stdout.pipe fs.createWriteStream("./video/#{new Date!}.avi")
-
-r = request
-  .get "http://192.168.2.51/videostream.cgi"
-  .auth 'admin', '123456'
-  .on 'error', (err) -> console.log err
-  .on 'response', (response) -> console.dir response.statusCode
+request
+  .get CAM_URL
+  .auth USER, PASS
+  .on 'error', (err) !-> console.err err
+  .on 'response', (response) !-> console.log response.statusCode
   .pipe consumer
-  # .pipe motion
-  .pipe ffmpeg.stdin
-  # .pipe process.stdout
-  # .pipe(writer)
-
-# process.on 'SIGINT', -> r.abort!
+  .pipe motion
