@@ -1,0 +1,3 @@
+[submodule "node_modules/motion"]
+	path = node_modules/motion
+	url = https://github.com/floriandotorg/motion.git

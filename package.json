@@ -1,0 +1,15 @@
+{
+  "name": "fcap",
+  "version": "1.0.0",
+  "description": "",
+  "main": "index.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "author": "",
+  "license": "ISC",
+  "dependencies": {
+    "mjpeg-consumer": "^0.4.0",
+    "request": "^2.49.0"
+  }
+}
