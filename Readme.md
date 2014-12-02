@@ -1,6 +1,6 @@
 # Dependencies
 
-- ffmpeg
+- avconv
 - ImageMagick
 
 # Setup
