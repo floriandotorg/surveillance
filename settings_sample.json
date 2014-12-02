@@ -1,0 +1,20 @@
+{
+  "cam": {
+    "url": "http://192.168.1.112/videostream.cgi",
+    "user": "admin",
+    "pass":""
+  },
+
+  "motion": {
+    "threshold": 16,
+    "prebuffer": 1,
+    "postbuffer": 3
+  },
+
+  "mail": {
+    "service": "gmail",
+    "user": "",
+    "pass": "",
+    "recipients": [""]
+  }
+}
