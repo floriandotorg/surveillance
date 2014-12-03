@@ -1,8 +1,8 @@
 {
   "cam": {
     "url": "http://192.168.1.112/videostream.cgi",
-    "user": "admin",
-    "pass":""
+    "user": "",
+    "pass": ""
   },
 
   "motion": {
@@ -16,5 +16,11 @@
     "user": "",
     "pass": "",
     "recipients": [""]
+  },
+
+  "dropbox": {
+    "key": "",
+    "secret": "",
+    "token": ""
   }
 }
